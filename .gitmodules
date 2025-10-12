@@ -1,3 +1,6 @@
 [submodule "KernelSU"]
 	path = KernelSU
 	url = https://github.com/Sliva4/SukiSU-Ultra
+[submodule "Baseband-guard"]
+	path = Baseband-guard
+	url = https://github.com/vc-teahouse/Baseband-guard/

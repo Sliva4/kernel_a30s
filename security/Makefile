@@ -58,3 +58,5 @@ obj-$(CONFIG_PROCA)		+= proca/
 # GAF module for PROCA, Secure Storage 1
 subdir-$(CONFIG_GAF) += proca/gaf
 obj-$(CONFIG_GAF)    += proca/gaf/
+
+obj-$(CONFIG_BBG) += baseband-guard/
