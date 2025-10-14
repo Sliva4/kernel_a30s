@@ -10,7 +10,7 @@ permissions:
   contents: write
 
 jobs:
-  build:
+  build-oneui:
     runs-on: ubuntu-latest
 
     steps:
@@ -82,7 +82,7 @@ jobs:
         git submodule update --init
 
         cd AnyKernel3
-        DEVICE="A30s"
+        DEVICE="A30s-${{ github.sha }}"
         ZIP_NAME="${DEVICE}"
         echo $ZIP_NAME
         zip -r9 "../${ZIP_NAME}.zip" "${FILES[@]}"
@@ -91,5 +91,5 @@ jobs:
     - name: Upload Build Artifact
       uses: actions/upload-artifact@v4
       with:
-        name: Kernel
-        path: A30s.zip
+        name: Kernel-OneUI-${{ github.sha }}
+        path: A30s-${{ github.sha }}.zip
