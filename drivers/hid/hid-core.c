@@ -1372,10 +1372,10 @@ static void hid_output_field(const struct hid_device *hid,
  */
 static size_t hid_compute_report_size(struct hid_report *report)
 {
-   if (report->size)
-      return ((report->size - 1) >> 3) + 1;
+	if (report->size)
+		return ((report->size - 1) >> 3) + 1;
 
-   return 0;
+	return 0;
 }
 
 /*
@@ -1519,7 +1519,9 @@ int hid_report_raw_event(struct hid_device *hid, int type, u8 *data, u32 size,
 
 	rsize = hid_compute_report_size(report);
 
-	if (rsize > HID_MAX_BUFFER_SIZE)
+	if (report_enum->numbered && rsize >= HID_MAX_BUFFER_SIZE)
+		rsize = HID_MAX_BUFFER_SIZE - 1;
+	else if (rsize > HID_MAX_BUFFER_SIZE)
 		rsize = HID_MAX_BUFFER_SIZE;
 
 	if (csize < rsize) {
