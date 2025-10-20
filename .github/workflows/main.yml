@@ -138,8 +138,8 @@ jobs:
     - name: Make kernel
       run: |
         echo "Building kernel"
-        yes "" | make ARCH=arm64 -j$(nproc)
-
+        yes "" | make ARCH=arm64 -j$(nproc) oldconfig
+        make ARCH=arm64 -j$(nproc)
     - name: Build DTB
       run: |
         echo "Building DTB"
