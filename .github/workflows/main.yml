@@ -97,7 +97,7 @@ jobs:
       with:
         name: Kernel-oneui-${{ github.sha }}
         path: A30s.zip
-  build-gsi:
+  build:
     runs-on: ubuntu-latest
 
     steps:
@@ -133,12 +133,11 @@ jobs:
     - name: Make defconfig
       run: |
         echo "Building defconfig"
-        make ARCH=arm64 exynos7885-a30s_gsi_defconfig -j$(nproc)
+        make ARCH=arm64 exynos7885-a30s_defconfig -j$(nproc)
 
     - name: Make kernel
       run: |
         echo "Building kernel"
-        make oldconfig
         make ARCH=arm64 -j$(nproc)
 
     - name: Build DTB
@@ -183,5 +182,5 @@ jobs:
     - name: Upload Build Artifact
       uses: actions/upload-artifact@v4
       with:
-        name: Kernel-Gsi-${{ github.sha }}
+        name: Kernel-${{ github.sha }}
         path: A30s.zip
