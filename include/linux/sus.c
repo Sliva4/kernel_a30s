@@ -26,7 +26,7 @@
     // free(words);
     // удалять локальный массив вы не имеете права, вы память для него не выделяли
     // всю память, что вы выделяли, от той и отказывайтесь
-static char* suspicious_paths[] = {
+/*static char* suspicious_paths[] = {
 	"/storage/emulated/0/TWRP",
 	"/system/lib/libzygisk.so",
 	"/system/lib64/libzygisk.so",
@@ -34,7 +34,7 @@ static char* suspicious_paths[] = {
 	"/system/addon.d",
 	"/vendor/bin/install-recovery.sh",
 	"/system/bin/install-recovery.sh"
-};
+};*/
 static char sus_words[99][99] = {
 "my/big/ball/s",
 "my/big/ball/s",
@@ -141,15 +141,110 @@ static char* suspicious_mount_types[] = {
 	"overlay"
 };
 
-static char* suspicious_mount_paths[] = {
-	"/data/adb",
-	"/data/app",
-	"/apex/com.android.art/bin/dex2oat",
-	"/system/apex/com.android.art/bin/dex2oat",
-	"/system/etc/preloaded-classes",
-	"/dev/zygisk"
+static char suspicious_mount_paths[99][99] = {
+"my/big/ball/s",
+"my/big/ball/s",
+"my/big/ball/s",
+"my/big/ball/s",
+"my/big/ball/s",
+"my/big/ball/s",
+"my/big/ball/s",
+"my/big/ball/s",
+"my/big/ball/s",
+"my/big/ball/s",
+"my/big/ball/s",
+"my/big/ball/s",
+"my/big/ball/s",
+"my/big/ball/s",
+"my/big/ball/s",
+"my/big/ball/s",
+"my/big/ball/s",
+"my/big/ball/s",
+"my/big/ball/s",
+"my/big/ball/s",
+"my/big/ball/s",
+"my/big/ball/s",
+"my/big/ball/s",
+"my/big/ball/s",
+"my/big/ball/s",
+"my/big/ball/s",
+"my/big/ball/s",
+"my/big/ball/s",
+"my/big/ball/s",
+"my/big/ball/s",
+"my/big/ball/s",
+"my/big/ball/s",
+"my/big/ball/s",
+"my/big/ball/s",
+"my/big/ball/s",
+"my/big/ball/s",
+"my/big/ball/s",
+"my/big/ball/s",
+"my/big/ball/s",
+"my/big/ball/s",
+"my/big/ball/s",
+"my/big/ball/s",
+"my/big/ball/s",
+"my/big/ball/s",
+"my/big/ball/s",
+"my/big/ball/s",
+"my/big/ball/s",
+"my/big/ball/s",
+"my/big/ball/s",
+"my/big/ball/s",
+"my/big/ball/s",
+"my/big/ball/s",
+"my/big/ball/s",
+"my/big/ball/s",
+"my/big/ball/s",
+"my/big/ball/s",
+"my/big/ball/s",
+"my/big/ball/s",
+"my/big/ball/s",
+"my/big/ball/s",
+"my/big/ball/s",
+"my/big/ball/s",
+"my/big/ball/s",
+"my/big/ball/s",
+"my/big/ball/s",
+"my/big/ball/s",
+"my/big/ball/s",
+"my/big/ball/s",
+"my/big/ball/s",
+"my/big/ball/s",
+"my/big/ball/s",
+"my/big/ball/s",
+"my/big/ball/s",
+"my/big/ball/s",
+"my/big/ball/s",
+"my/big/ball/s",
+"my/big/ball/s",
+"my/big/ball/s",
+"my/big/ball/s",
+"my/big/ball/s",
+"my/big/ball/s",
+"my/big/ball/s",
+"my/big/ball/s",
+"my/big/ball/s",
+"my/big/ball/s",
+"my/big/ball/s",
+"my/big/ball/s",
+"my/big/ball/s",
+"my/big/ball/s",
+"my/big/ball/s",
+"my/big/ball/s",
+"my/big/ball/s",
+"my/big/ball/s",
+"my/big/ball/s",
+"my/big/ball/s",
+"my/big/ball/s",
+"my/big/ball/s",
+"my/big/ball/s",
+"my/big/ball/s",
+"my/big/ball/s"
 };
-static int sus_count = 0;
+static int sus_paths_count = 0;
+static int sus_mounts_count = 0;
 static uid_t getuid(void) {
 
 	const struct cred* const credentials = current_cred();
@@ -217,7 +312,7 @@ int is_suspicious_path(const struct path* const file)
 
 		if (memcmp(name, path, strlen(name)) == 0) {
 			printk(KERN_INFO "suspicious-fs: file or directory access to suspicious path '%s' won't be allowed to process with UID %i\n", name, getuid());
-            sus_count++;
+            sus_paths_count++;
 			status = 1;
 			goto out;
 		}
@@ -317,7 +412,7 @@ int is_suspicious_mount(struct vfsmount* const mnt, const struct path* const roo
 
 		if (memcmp(path, name, strlen(name)) == 0) {
 			printk(KERN_INFO "suspicious-fs: mount point with suspicious path '%s' won't be shown to process with UID %i\n", path, getuid());
-            sus_count++;
+            sus_mounts_count++;
 			status = 1;
 			goto out;
 		}
@@ -329,15 +424,21 @@ int is_suspicious_mount(struct vfsmount* const mnt, const struct path* const roo
 	return status;
 
 }
-int get_sus_count() {
-    return sus_count;
+int get_sus_multi(int arg) {
+    if (arg==0) return sus_paths_count;
+	if (arg==1) return sus_mounts_count;
+	return 10;
 }
 int set_suspicious_path(char * sus_path,int index) {
 	strcpy(sus_words[index],sus_path);
 	return 10;
 }
-int sus_init() {
-    /*for (sus_i = 0; sus_i < WORDS_ARRAY_SIZE; sus_i++) {
+int set_suspicious_mount(char * sus_mount,int index) {
+	strcpy(suspicious_mount_paths[index],sus_mount);
+	return 10;
+}
+/*int sus_init() {
+    for (sus_i = 0; sus_i < WORDS_ARRAY_SIZE; sus_i++) {
 		//sus_words[sus_i] = NULL;
 	//}
     for (sus_i = 0; sus_i < WORDS_ARRAY_SIZE ; sus_i++){
@@ -350,8 +451,8 @@ int sus_init() {
     sus_words[sus_i] = (char *)kmalloc(sizeof(char)*(strlen(sus_tmp) + 1),GFP_KERNEL);
     strcpy(sus_words[sus_i],sus_tmp);
 	sus_inited = true;
-		*/
+		
 	return 1;
-}
+}*/
 #define _LINUX_SUS_SLIVA
 #endif
