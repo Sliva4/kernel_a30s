@@ -377,7 +377,7 @@ int is_suspicious_mount(struct vfsmount* const mnt, const struct path* const roo
 
 		if (strcmp(mnt->mnt_root->d_sb->s_type->name, name) == 0) {
 			printk(KERN_INFO "suspicious-fs: mount point with suspicious type '%s' won't be shown to process with UID %i\n", mnt->mnt_root->d_sb->s_type->name, getuid());
-            sus_count++;
+            sus_mounts_count++;
 			status = 1;
 			goto out;
 		}
