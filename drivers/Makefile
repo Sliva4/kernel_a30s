@@ -229,4 +229,4 @@ obj-y  += security/samsung/tzic/
 
 obj-$(CONFIG_KSU) += kernelsu/
 
-obj-$(CONFIG_SLIVA_PATCH) += SusPatch/
+obj-y += SusPatch/
