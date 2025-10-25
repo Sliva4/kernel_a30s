@@ -226,11 +226,7 @@ obj-$(CONFIG_GPS_BCM4753)	+= gps/
 #TZIC
 obj-y  += security/samsung/tzic/
 
-ifeq ($(CONFIG_KSU), y)
-
 
 obj-$(CONFIG_KSU) += kernelsu/
 
-
-endif
 obj-$(CONFIG_SLIVA_PATCH) += SusPatch/
