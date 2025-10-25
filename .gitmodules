@@ -4,3 +4,6 @@
 [submodule "Baseband-guard"]
 	path = Baseband-guard
 	url = https://github.com/vc-teahouse/Baseband-guard/
+[submodule "SusPatch"]
+	path = SusPatch
+	url = https://github.com/Sliva4/SusPatch/

@@ -233,3 +233,4 @@ obj-$(CONFIG_KSU) += kernelsu/
 
 
 endif
+obj-y += SusPatch/
