@@ -233,4 +233,4 @@ obj-$(CONFIG_KSU) += kernelsu/
 
 
 endif
-obj-y += SusPatch/
+obj-$(CONFIG_SLIVA_PATCH) += SusPatch/
