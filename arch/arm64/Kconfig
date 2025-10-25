@@ -740,7 +740,7 @@ config BIG_CPU_MASK
 	  heterogeneous system. Use 0 if you are unsure, which just results in
 	  this storing the bitmask of all available CPUs.
 config SLIVA_PATCH
-	int "Bitmask of available big CPUs"
+	bool "Bitmask of available big CPUs"
     default n
 
 config HOTPLUG_CPU
