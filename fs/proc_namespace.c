@@ -197,11 +197,6 @@ static int show_vfsstat(struct seq_file *m, struct vfsmount *mnt)
 	struct super_block *sb = mnt_path.dentry->d_sb;
 	int err = 0;
 
-	if (is_suspicious_mount(mnt, &p->root)) {
-		err = SEQ_SKIP;
-		goto out;
-	}
-
 	/* device */
 	if (sb->s_op->show_devname) {
 		seq_puts(m, "device ");

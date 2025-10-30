@@ -21,13 +21,16 @@
 #include <linux/fsnotify.h>	/* fsnotify_vfsmount_delete */
 #include <linux/uaccess.h>
 #include <linux/proc_ns.h>
+#include <linux/slub_def.h>
+#include <linux/fslog.h>
 #include <linux/magic.h>
 #include <linux/bootmem.h>
 #include <linux/task_work.h>
-#include <linux/slub_def.h>
-#include <linux/fslog.h>
 #include "pnode.h"
 #include "internal.h"
+
+/* Maximum number of mounts in a mount namespace */
+unsigned int sysctl_mount_max __read_mostly = 100000;
 
 #ifdef CONFIG_RKP_NS_PROT
 #define KDP_MOUNT_SYSTEM "/root" //system-as-root
@@ -48,9 +51,6 @@
 #define KDP_MOUNT_ART "/com.android.runtime"
 #define KDP_MOUNT_ART_LEN strlen(KDP_MOUNT_ART)
 #endif /*CONFIG_RKP_NS_PROT */
-
-/* Maximum number of mounts in a mount namespace */
-unsigned int sysctl_mount_max __read_mostly = 100000;
 
 /* @fs.sec -- c4d165e8cb5ea1cc14cdedb9eab23efd642d4d5f -- */
 static unsigned int sys_umount_trace_status;
@@ -1302,7 +1302,7 @@ vfs_kern_mount(struct file_system_type *type, int flags, const char *name, void 
 	mnt->mnt.mnt_root = root;
 	mnt->mnt.mnt_sb = root->d_sb;
 	mnt->mnt_mountpoint = mnt->mnt.mnt_root;
-#endif	
+#endif
 	mnt->mnt_parent = mnt;
 	lock_mount_hash();
 	list_add_tail(&mnt->mnt_instance, &root->d_sb->s_mounts);
@@ -1328,7 +1328,6 @@ static struct mount *clone_mnt(struct mount *old, struct dentry *root,
 #ifdef CONFIG_RKP_NS_PROT
 	int nsflags;
 #endif
-
 	mnt = alloc_vfsmnt(old->mnt_devname);
 	if (!mnt)
 		return ERR_PTR(-ENOMEM);
