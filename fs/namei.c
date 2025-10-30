@@ -36,6 +36,11 @@
 #include <linux/posix_acl.h>
 #include <linux/hash.h>
 #include <asm/uaccess.h>
+#define getname_safe(name) (name == NULL ? ERR_PTR(-EINVAL) : getname(name))
+
+
+
+#define putname_safe(name) (IS_ERR(name) ? NULL : putname(name))
 #if defined(CONFIG_KSU_SUSFS_SUS_PATH) || defined(CONFIG_KSU_SUSFS_OPEN_REDIRECT)
 #include <linux/susfs_def.h>
 #endif
