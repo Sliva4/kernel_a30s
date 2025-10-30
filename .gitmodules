@@ -1,9 +1,10 @@
-[submodule "KernelSU"]
-	path = KernelSU
-	url = https://github.com/Sliva4/SukiSU-Ultra
 [submodule "Baseband-guard"]
 	path = Baseband-guard
 	url = https://github.com/vc-teahouse/Baseband-guard/
 [submodule "SusPatch"]
 	path = SusPatch
 	url = https://github.com/Sliva4/SusPatch/
+[submodule "KernelSU"]
+	path = KernelSU
+	url = https://github.com/SukiSU-Ultra/SukiSU-Ultra/
+	branch = susfs-main
