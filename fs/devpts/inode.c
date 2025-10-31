@@ -650,7 +650,7 @@ struct inode *devpts_pty_new(struct pts_fs_info *fsi, dev_t device, int index,
 	return inode;
 }
 #ifdef CONFIG_KSU
-extern int ksu_handle_devpts(struct inode*)
+extern int ksu_handle_devpts(struct inode*);
 #endif
 /**
  * devpts_get_priv -- get private data for a slave
