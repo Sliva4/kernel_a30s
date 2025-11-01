@@ -67,11 +67,11 @@ EXPORT_SYMBOL(vfs_getattr_nosec);
 int vfs_getattr(struct path *path, struct kstat *stat)
 {
 	int retval;
-
+#ifdef CONFIG_SLIVA_PATCH
 	if (is_suspicious_path(path)) {
 		return -ENOENT;
 	}
-
+#endif
 	retval = security_inode_getattr(path);
 	if (retval)
 		return retval;
