@@ -5,10 +5,14 @@
 /_______  /|____/__| \_/  (____  /
         \/                     \/ 
 
+|<<<<<<<<<<<<<<<<<<<<<<<<<<|
+|HYPERSONIC BASED (topser9)|
+|>>>>>>>>>>>>>>>>>>>>>>>>>>|
+
 >------------------------------------------------<
-# For Galaxy A30s
+# For OneUI 3, AOSP Q/R/S
 + Linux LINUXVERSION
-+ KSUN 1.0.9 (12797)
++ KernelSU-Next 1.0.9 (12797) | Wild KSU Supported
 + SuSFS 1.5.7
 + USB Fast charge (upto 5000 mA)
 + Power Suspend v2.0
