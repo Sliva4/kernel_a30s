@@ -6,5 +6,5 @@
 	url = https://github.com/Sliva4/SusPatch/
 [submodule "KernelSU"]
 	path = KernelSU
-	url = https://github.com/SukiSU-Ultra/SukiSU-Ultra/
+	url = https://github.com/Sliva4/SukiSU-Ultra/
 	branch = nongki
