@@ -12,8 +12,8 @@
 >------------------------------------------------<
 # For OneUI 3, AOSP Q/R/S
 + Linux LINUXVERSION
-+ KernelSU-Next 1.0.9 (12797) | Wild KSU Supported
-+ SuSFS 1.5.7
++ SukiSU-Ultra 4.0.0
++ SuSFS 1.5.5 (disabled)
 + USB Fast charge (upto 5000 mA)
 + Power Suspend v2.0
 >------------------------------------------------<

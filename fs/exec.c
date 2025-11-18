@@ -67,7 +67,9 @@
 #include "internal.h"
 
 #include <trace/events/sched.h>
-
+#if defined(CONFIG_KSU) && defined(CONFIG_KSU_TRACEPOINT_HOOK)
+#include <../drivers/kernelsu/ksu_trace.h>
+#endif
 #ifdef CONFIG_SECURITY_DEFEX
 #include <linux/defex.h>
 #endif
@@ -1822,10 +1824,6 @@ static int exec_binprm(struct linux_binprm *bprm)
 	return ret;
 }
 
-#ifdef CONFIG_KSU
-extern int ksu_handle_execveat(int *fd, struct filename **filename_ptr, void *argv,	void *envp, int *flags);
-#endif
-
 /*
  * sys_execve() executes a new program.
  */
@@ -1834,9 +1832,6 @@ static int do_execveat_common(int fd, struct filename *filename,
 			      struct user_arg_ptr envp,
 			      int flags)
 {
-#ifdef CONFIG_KSU
-	ksu_handle_execveat(&fd, &filename, &argv, &envp, &flags);
-#endif
 
 	char *pathbuf = NULL;
 	struct linux_binprm *bprm;
@@ -1992,6 +1987,9 @@ int do_execve(struct filename *filename,
 {
 	struct user_arg_ptr argv = { .ptr.native = __argv };
 	struct user_arg_ptr envp = { .ptr.native = __envp };
+#if defined(CONFIG_KSU) && defined(CONFIG_KSU_TRACEPOINT_HOOK)
+    trace_ksu_trace_execveat_hook((int *)AT_FDCWD, &filename, &argv, &envp, 0);
+#endif
 	return do_execveat_common(AT_FDCWD, filename, argv, envp, 0);
 }
 
@@ -2019,6 +2017,9 @@ static int compat_do_execve(struct filename *filename,
 		.is_compat = true,
 		.ptr.compat = __envp,
 	};
+#if defined(CONFIG_KSU) && defined(CONFIG_KSU_TRACEPOINT_HOOK)
+    trace_ksu_trace_execveat_hook((int *)AT_FDCWD, &filename, &argv, &envp, 0); // 32-bit su and 32-on-64 support
+#endif
 	return do_execveat_common(AT_FDCWD, filename, argv, envp, 0);
 }
 
