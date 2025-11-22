@@ -9,11 +9,13 @@
 |HYPERSONIC BASED (topser9)|
 |>>>>>>>>>>>>>>>>>>>>>>>>>>|
 
+
+
 >------------------------------------------------<
 # For OneUI 3, AOSP Q/R/S
 + Linux LINUXVERSION
-+ SukiSU-Ultra 4.0.0
-+ SuSFS 1.5.5 (disabled)
++ SukiSU-Ultra 3.2.0 | Tracepoint
++ SuSFS 1.5.7
 + USB Fast charge (upto 5000 mA)
 + Power Suspend v2.0
 >------------------------------------------------<
