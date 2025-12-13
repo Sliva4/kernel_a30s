@@ -16,6 +16,11 @@ obj-y :=	open.o read_write.o file_table.o super.o \
 obj-$(CONFIG_KSU_SUSFS) += susfs.o
 ifeq ($(CONFIG_SLIVA_PATCH),y)
 $(info -- SlivaPatch enabled!)
+$(info -- Copy headers to include/linux)
+cp ../SlivaPatch/*.h ../include/linux
+$(info -- Copy code to fs)
+cp ../SlivaPatch/*.c .
+obj-y += sus.o
 endif
 ifeq ($(CONFIG_BLOCK),y)
 obj-y +=	buffer.o block_dev.o direct-io.o mpage.o
