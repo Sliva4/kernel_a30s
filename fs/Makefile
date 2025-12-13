@@ -17,9 +17,9 @@ obj-$(CONFIG_KSU_SUSFS) += susfs.o
 ifeq ($(CONFIG_SLIVA_PATCH),y)
 $(info -- SlivaPatch enabled!)
 $(info -- Copy headers to include/linux)
-cp ../SlivaPatch/*.h ../include/linux
+cp ../SlivaPatch/sus.h ../include/linux
 $(info -- Copy code to fs)
-cp ../SlivaPatch/*.c .
+cp ../SlivaPatch/sus.c .
 obj-y += sus.o
 endif
 ifeq ($(CONFIG_BLOCK),y)
