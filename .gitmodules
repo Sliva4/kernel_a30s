@@ -6,4 +6,5 @@
 	url = https://github.com/Sliva4/SusPatch/
 [submodule "KernelSU"]
 	path = KernelSU
-	url = https://github.com/rsuntk/KernelSU
+	url = https://github.com/Sliva4/KernelSU
+	branch = susfs-rksu-master
