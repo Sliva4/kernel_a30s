@@ -19,7 +19,9 @@
 #endif
 #include <asm/uaccess.h>
 #include <asm/unistd.h>
-
+#ifdef CONFIG_SLIVA_PATCH
+#include <linux/sus.h>
+#endif
 void generic_fillattr(struct inode *inode, struct kstat *stat)
 {
 	stat->dev = inode->i_sb->s_dev;
