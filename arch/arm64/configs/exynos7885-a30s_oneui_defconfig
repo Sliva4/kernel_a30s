@@ -2,7 +2,6 @@
 # Automatically generated file; DO NOT EDIT.
 # Linux/arm64 4.4.177 Kernel Configuration
 #
-CONFIG_KSU_THRONE_TRACKER_LEGACY=y
 CONFIG_ARM64=y
 CONFIG_64BIT=y
 CONFIG_ARCH_PHYS_ADDR_T_64BIT=y
