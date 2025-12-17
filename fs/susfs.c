@@ -13,7 +13,6 @@
 #include <linux/version.h>
 #include <linux/fdtable.h>
 #include <linux/statfs.h>
-#include <linux/random.h>
 #include <linux/susfs.h>
 #include "mount.h"
 
@@ -313,6 +312,14 @@ static int susfs_update_sus_kstat_inode(char *target_pathname) {
 	err = kern_path(target_pathname, LOOKUP_FOLLOW, &p);
 	if (err) {
 		SUSFS_LOGE("Failed opening file '%s'\n", target_pathname);
+		return 1;
+	}
+
+	// We don't allow path of which filesystem type is "tmpfs", because its inode->i_ino is starting from 1 again,
+	// which will cause wrong comparison in function susfs_sus_ino_for_filldir64()
+	if (strcmp(p.mnt->mnt_sb->s_type->name, "tmpfs") == 0) {
+		SUSFS_LOGE("target_pathname: '%s' cannot be added since its filesystem is 'tmpfs'\n", target_pathname);
+		path_put(&p);
 		return 1;
 	}
 
@@ -833,6 +840,66 @@ struct filename* susfs_get_redirected_path(unsigned long ino) {
 	return ERR_PTR(-ENOENT);
 }
 #endif // #ifdef CONFIG_KSU_SUSFS_OPEN_REDIRECT
+
+/* sus_su */
+#ifdef CONFIG_KSU_SUSFS_SUS_SU
+bool susfs_is_sus_su_hooks_enabled __read_mostly = false;
+static int susfs_sus_su_working_mode = 0;
+extern void ksu_susfs_enable_sus_su(void);
+extern void ksu_susfs_disable_sus_su(void);
+
+int susfs_get_sus_su_working_mode(void) {
+	return susfs_sus_su_working_mode;
+}
+
+int susfs_sus_su(struct st_sus_su* __user user_info) {
+	struct st_sus_su info;
+	int last_working_mode = susfs_sus_su_working_mode;
+
+	if (copy_from_user(&info, user_info, sizeof(struct st_sus_su))) {
+		SUSFS_LOGE("failed copying from userspace\n");
+		return 1;
+	}
+
+	if (info.mode == SUS_SU_WITH_HOOKS) {
+		if (last_working_mode == SUS_SU_WITH_HOOKS) {
+			SUSFS_LOGE("current sus_su mode is already %d\n", SUS_SU_WITH_HOOKS);
+			return 1;
+		}
+		if (last_working_mode != SUS_SU_DISABLED) {
+			SUSFS_LOGE("please make sure the current sus_su mode is %d first\n", SUS_SU_DISABLED);
+			return 2;
+		}
+		ksu_susfs_enable_sus_su();
+		susfs_sus_su_working_mode = SUS_SU_WITH_HOOKS;
+		susfs_is_sus_su_hooks_enabled = true;
+		SUSFS_LOGI("core kprobe hooks for ksu are disabled!\n");
+		SUSFS_LOGI("non-kprobe hook sus_su is enabled!\n");
+		SUSFS_LOGI("sus_su mode: %d\n", SUS_SU_WITH_HOOKS);
+		return 0;
+	} else if (info.mode == SUS_SU_DISABLED) {
+		if (last_working_mode == SUS_SU_DISABLED) {
+			SUSFS_LOGE("current sus_su mode is already %d\n", SUS_SU_DISABLED);
+			return 1;
+		}
+		susfs_is_sus_su_hooks_enabled = false;
+		ksu_susfs_disable_sus_su();
+		susfs_sus_su_working_mode = SUS_SU_DISABLED;
+		if (last_working_mode == SUS_SU_WITH_HOOKS) {
+			SUSFS_LOGI("core kprobe hooks for ksu are enabled!\n");
+			goto out;
+		}
+out:
+		if (copy_to_user(user_info, &info, sizeof(info)))
+			SUSFS_LOGE("copy_to_user() failed\n");
+		return 0;
+	} else if (info.mode == SUS_SU_WITH_OVERLAY) {
+		SUSFS_LOGE("sus_su mode %d is deprecated\n", SUS_SU_WITH_OVERLAY);
+		return 1;
+	}
+	return 1;
+}
+#endif // #ifdef CONFIG_KSU_SUSFS_SUS_SU
 
 /* susfs_init */
 void susfs_init(void) {
