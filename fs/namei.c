@@ -3496,7 +3496,7 @@ struct file *do_filp_open(int dfd, struct filename *pathname,
 			return filp;
 		}
 	}
-+#endif
+#endif
 	restore_nameidata();
 	return filp;
 }
