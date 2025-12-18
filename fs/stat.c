@@ -16,8 +16,8 @@
 #include <linux/pagemap.h>
 #include <asm/uaccess.h>
 #include <asm/unistd.h>
-#ifdef CONFIG_SLIVA_PATCH
-#include <linux/sus.h>
+#ifdef CONFIG_KSU_SUSFS
+#include <linux/susfs_def.h>
 #endif
 void generic_fillattr(struct inode *inode, struct kstat *stat)
 {
@@ -66,11 +66,6 @@ EXPORT_SYMBOL(vfs_getattr_nosec);
 int vfs_getattr(struct path *path, struct kstat *stat)
 {
 	int retval;
-#ifdef CONFIG_SLIVA_PATCH
-	if (is_suspicious_path(path)) {
-		return -ENOENT;
-	}
-#endif
 	retval = security_inode_getattr(path);
 	if (retval)
 		return retval;
@@ -92,7 +87,9 @@ int vfs_fstat(unsigned int fd, struct kstat *stat)
 }
 EXPORT_SYMBOL(vfs_fstat);
 
-#ifdef CONFIG_KSU
+#ifdef CONFIG_KSU_SUSFS
+extern bool ksu_su_compat_enabled __read_mostly;
+extern bool __ksu_is_allow_uid_for_current(uid_t uid);
 extern int ksu_handle_stat(int *dfd, const char __user **filename_user, int *flags);
 #endif
 int vfs_fstatat(int dfd, const char __user *filename, struct kstat *stat,
@@ -102,8 +99,16 @@ int vfs_fstatat(int dfd, const char __user *filename, struct kstat *stat,
 	int error = -EINVAL;
 	unsigned int lookup_flags = 0;
 
-#ifdef CONFIG_KSU
-	ksu_handle_stat(&dfd, &filename, &flag);
+#ifdef CONFIG_KSU_SUSFS
+	if (likely(susfs_is_current_proc_umounted()) || !ksu_su_compat_enabled) {
+		goto orig_flow;
+	}
+
+	if (unlikely(__ksu_is_allow_uid_for_current(current_uid().val))) {
+		ksu_handle_stat(&dfd, &filename, &flags);
+	}
+
+orig_flow:
 #endif
 	if ((flag & ~(AT_SYMLINK_NOFOLLOW | AT_NO_AUTOMOUNT |
 		      AT_EMPTY_PATH)) != 0)
