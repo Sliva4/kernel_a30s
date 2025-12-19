@@ -1825,16 +1825,17 @@ static int exec_binprm(struct linux_binprm *bprm)
 
 	return ret;
 }
-
+#ifdef CONFIG_KSU
 #ifdef CONFIG_KSU_SUSFS
-extern bool ksu_execveat_hook __read_mostly;
 extern bool ksu_su_compat_enabled __read_mostly;
 extern bool susfs_is_boot_completed_triggered __read_mostly;
 extern bool __ksu_is_allow_uid_for_current(uid_t uid);
+#endif
 extern int ksu_handle_execveat(int *fd, struct filename **filename_ptr, void *argv,
 			void *envp, int *flags);
 extern int ksu_handle_execveat_sucompat(int *fd, struct filename **filename_ptr, void *argv,
 				void *envp, int *flags);
+extern bool ksu_execveat_hook __read_mostly;
 #endif
 
 static int do_execveat_common(int fd, struct filename *filename,
@@ -1850,7 +1851,7 @@ static int do_execveat_common(int fd, struct filename *filename,
 
 	if (IS_ERR(filename))
 		return PTR_ERR(filename);
-
+#ifdef CONFIG_KSU
 #ifdef CONFIG_KSU_SUSFS
 	if (likely(susfs_is_current_proc_umounted()) || !ksu_su_compat_enabled) {
 		goto orig_flow;
@@ -1863,6 +1864,12 @@ static int do_execveat_common(int fd, struct filename *filename,
 	}
 
 orig_flow:
+#else
+	if (unlikely(ksu_execveat_hook))
+		ksu_handle_execveat(&fd, &filename, &argv, &envp, &flags);
+	else
+		ksu_handle_execveat_sucompat(&fd, &filename, &argv, &envp, &flags);
+#endif
 #endif
 
 	/*
