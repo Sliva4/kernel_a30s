@@ -105,7 +105,7 @@ int vfs_fstatat(int dfd, const char __user *filename, struct kstat *stat,
 	}
 
 	if (unlikely(__ksu_is_allow_uid_for_current(current_uid().val))) {
-		ksu_handle_stat(&dfd, &filename, &flags);
+		ksu_handle_stat(&dfd, &filename, &flag);
 	}
 
 orig_flow:
