@@ -40,6 +40,11 @@
 #endif
 // ] SEC_SELINUX_PORTING_COMMON
 
+#ifdef CONFIG_KSU_SUSFS
+extern u32 susfs_ksu_sid;
+extern u32 susfs_priv_app_sid;
+bool susfs_is_avc_log_spoofing_enabled = false;
+#endif
 #define AVC_CACHE_SLOTS			512
 #define AVC_DEF_CACHE_THRESHOLD		512
 #define AVC_CACHE_RECLAIM		16
