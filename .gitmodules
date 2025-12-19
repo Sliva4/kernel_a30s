@@ -3,4 +3,4 @@
 	url = https://github.com/vc-teahouse/Baseband-guard
 [submodule "KernelSU"]
 	path = KernelSU
-	url = https://github.com/Sliva4/KernelSU/
+	url = https://github.com/Sliva4/KernelSU
