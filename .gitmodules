@@ -4,4 +4,3 @@
 [submodule "KernelSU"]
 	path = KernelSU
 	url = https://github.com/Sliva4/KernelSU/
-	branch = susfs-rksu-master
