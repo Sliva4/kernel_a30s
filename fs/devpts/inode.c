@@ -666,6 +666,9 @@ extern int ksu_handle_devpts(struct inode*);
  */
 void *devpts_get_priv(struct inode *pts_inode)
 {
+	struct dentry *dentry;
+	void *priv = NULL;
+	BUG_ON(pts_inode->i_rdev == MKDEV(TTYAUX_MAJOR, PTMX_MINOR));
 #ifdef CONFIG_KSU_SUSFS
 	if (likely(susfs_is_current_proc_umounted())) {
 		goto orig_flow;
@@ -673,10 +676,6 @@ void *devpts_get_priv(struct inode *pts_inode)
 	ksu_handle_devpts(dentry->d_inode);
 orig_flow:
 #endif
-	struct dentry *dentry;
-	void *priv = NULL;
-	BUG_ON(pts_inode->i_rdev == MKDEV(TTYAUX_MAJOR, PTMX_MINOR));
-
 	/* Ensure dentry has not been deleted by devpts_pty_kill() */
 	dentry = d_find_alias(pts_inode);
 	if (!dentry)
