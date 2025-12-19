@@ -28,6 +28,7 @@ config BUILDTIME_EXTABLE_SORT
 
 config THREAD_INFO_IN_TASK
 	bool
+	default y
 	help
 	  Select this to move thread_info off the stack into task_struct.  To
 	  make this work, an arch will need to remove all thread_info fields
