@@ -82,8 +82,6 @@ jobs:
           "tools/magiskboot"
           "anykernel.sh"
         )
-        
-        git submodule update --init
 
         cd AnyKernel3
         DEVICE="A30s"
