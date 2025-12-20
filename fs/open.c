@@ -471,18 +471,6 @@ SYSCALL_DEFINE1(chdir, const char __user *, filename)
 	struct path path;
 	int error;
 	unsigned int lookup_flags = LOOKUP_FOLLOW | LOOKUP_DIRECTORY;
-#ifdef CONFIG_SLIVA_PATCH
-	struct filename* fname;
-	int status;
-
-	fname = getname_safe(filename);
-	status = suspicious_path(fname);
-	putname_safe(fname);
-
-	if (status) {
-		return -ENOENT;
-	}
-#endif
 retry:
 	error = user_path_at(AT_FDCWD, filename, lookup_flags, &path);
 	if (error)
