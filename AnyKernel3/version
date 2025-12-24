@@ -11,6 +11,7 @@
 # For OneUI 3, AOSP Q/R/S
 + Linux LINUXVERSION
 + rsuntk KernelSU 3.0.0
++ WireGuard
 + USB Fast charge (upto 5000 mA)
 + Power Suspend v2.0
 >------------------------------------------------<
