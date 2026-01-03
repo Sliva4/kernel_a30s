@@ -8,11 +8,13 @@
 |__/     |__/|__/|__/  |__/   \___/        
                                            
 >------------------------------------------------<
+<< -- Mint R1 -- >>
 # For OneUI 3, AOSP Q/R/S
 + Linux LINUXVERSION
-+ rsuntk KernelSU 3.0.0
++ RKSU 3.0.0 (path_umount backported)
 + WireGuard
 + BBG
++ EroFS
 + USB Fast charge (upto 5000 mA)
 + Power Suspend v2.0
 >------------------------------------------------<
