@@ -2163,6 +2163,7 @@ SYSCALL_DEFINE1(oldumount, char __user *, name)
 
 #endif
 
+#ifdef CONFIG_KSU
 static int can_umount(const struct path *path, int flags)
  {
 	 struct mount *mnt = real_mount(path->mnt);
@@ -2192,6 +2193,7 @@ int path_umount(struct path *path, int flags)
 	 mntput_no_expire(mnt);
 	 return ret;
  }
+#endif
 
 static bool is_mnt_ns_file(struct dentry *dentry)
 {
