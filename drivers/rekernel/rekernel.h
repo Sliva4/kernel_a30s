@@ -1,3 +1,6 @@
+#ifndef REKERNEL_H
+#define REKERNEL_H
+
 #include <linux/init.h>
 #include <linux/types.h>
 
@@ -270,7 +273,7 @@ static int start_rekernel(void) {
 	return LINE_SUCCESS;
 }
 
-void rekernel_report(int reporttype, int type, pid_t src_pid, struct task_struct* src, pid_t dst_pid, struct task_struct* dst, bool oneway, struct binder_transaction_data* tr) {
+inline void rekernel_report(int reporttype, int type, pid_t src_pid, struct task_struct* src, pid_t dst_pid, struct task_struct* dst, bool oneway, struct binder_transaction_data* tr) {
 	char binder_kmsg[PACKET_SIZE];
 	char buf_data[INTERFACETOKEN_BUFF_SIZE];
 	size_t buf_data_size;
@@ -329,7 +332,7 @@ void rekernel_report(int reporttype, int type, pid_t src_pid, struct task_struct
 	sendMessage(binder_kmsg, strlen(binder_kmsg));
 }
 
-void binder_reply_handler(pid_t src_pid, struct task_struct* src, pid_t dst_pid, struct task_struct* dst, bool oneway, struct binder_transaction_data* tr) {
+inline void binder_reply_handler(pid_t src_pid, struct task_struct* src, pid_t dst_pid, struct task_struct* dst, bool oneway, struct binder_transaction_data* tr) {
 	if (unlikely(!dst))
 		return;
 	if (task_uid(dst).val > MAX_SYSTEM_UID || src_pid == dst_pid)
@@ -339,7 +342,7 @@ void binder_reply_handler(pid_t src_pid, struct task_struct* src, pid_t dst_pid,
 	rekernel_report(BINDER, REPLY, src_pid, src, dst_pid, dst, oneway, tr);
 }
 
-void binder_trans_handler(pid_t src_pid, struct task_struct* src, pid_t dst_pid, struct task_struct* dst, bool oneway, struct binder_transaction_data* tr) {
+inline void binder_trans_handler(pid_t src_pid, struct task_struct* src, pid_t dst_pid, struct task_struct* dst, bool oneway, struct binder_transaction_data* tr) {
 	if (unlikely(!dst))
 		return;
 	if ((task_uid(dst).val <= MIN_USERAPP_UID) || src_pid == dst_pid)
@@ -348,10 +351,11 @@ void binder_trans_handler(pid_t src_pid, struct task_struct* src, pid_t dst_pid,
 	rekernel_report(BINDER, TRANSACTION, src_pid, src, dst_pid, dst, oneway, tr);
 }
 
-void binder_overflow_handler(pid_t src_pid, struct task_struct* src, pid_t dst_pid, struct task_struct* dst, bool oneway, struct binder_transaction_data* tr) {
+inline void binder_overflow_handler(pid_t src_pid, struct task_struct* src, pid_t dst_pid, struct task_struct* dst, bool oneway, struct binder_transaction_data* tr) {
 	if (unlikely(!dst))
 		return;
 
 	// oneway=1
 	rekernel_report(BINDER, OVERFLOW, src_pid, src, dst_pid, dst, oneway, tr);
 }
+#endif
