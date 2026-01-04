@@ -228,5 +228,3 @@ obj-y  += security/samsung/tzic/
 
 
 obj-$(CONFIG_KSU) += kernelsu/
-
-obj-$(CONFIG_REKERNEL) += rekernel/
