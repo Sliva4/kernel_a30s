@@ -18,18 +18,6 @@
 #include <uapi/linux/android/binder.h>
 #include "rekernel.h"
 
-#define MIN_USERAPP_UID				10000
-#define MAX_SYSTEM_UID				2000
-#define SYSTEM_APP_UID				1000
-#define INTERFACETOKEN_BUFF_SIZE	140
-#define PARCEL_OFFSET				16
-#define LINE_ERROR					1
-#define LINE_SUCCESS				0
-
-#define NETLINK_REKERNEL_MAX		26
-#define NETLINK_REKERNEL_MIN		22
-#define USER_PORT					100
-
 static const char* binder_type[] = {
 	"reply",
 	"transaction",
