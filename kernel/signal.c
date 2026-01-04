@@ -46,7 +46,7 @@
 #include "audit.h"	/* audit_signal_info() */
 
 #ifdef CONFIG_REKERNEL
-#include <../rekernel/rekernel.h>
+#include <../drivers/rekernel/rekernel.h>
 #endif
 
 #ifdef CONFIG_SAMSUNG_FREECESS
