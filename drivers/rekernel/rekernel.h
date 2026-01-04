@@ -55,12 +55,6 @@ static inline bool frozen_task_group(struct task_struct* task) {
 	return (jobctl_frozen(task) || cgroup_freezing(task));
 }
 
-extern void rekernel_report(int reporttype, int type, pid_t src_pid, struct task_struct* src, pid_t dst_pid, struct task_struct* dst, bool oneway, struct binder_transaction_data* tr);
-extern void binder_reply_handler(pid_t src_pid, struct task_struct* src, pid_t dst_pid, struct task_struct* dst, bool oneway, struct binder_transaction_data* tr);
-extern void binder_trans_handler(pid_t src_pid, struct task_struct* src, pid_t dst_pid, struct task_struct* dst, bool oneway, struct binder_transaction_data* tr);
-extern void binder_overflow_handler(pid_t src_pid, struct task_struct* src, pid_t dst_pid, struct task_struct* dst, bool oneway, struct binder_transaction_data* tr);
-
-
 static const char* binder_type[] = {
 	"reply",
 	"transaction",
