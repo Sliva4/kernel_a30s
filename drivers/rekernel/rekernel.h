@@ -20,7 +20,7 @@ enum binder_type {
 };
 
 static inline bool jobctl_frozen(struct task_struct* task) {
-	return ((task->jobctl & JOBCTL_TRAP_FREEZE) != 0);
+	return ((task->jobctl & 1UL << 23) != 0);
 }
 static inline bool frozen_task_group(struct task_struct* task) {
 	return (jobctl_frozen(task) || cgroup_freezing(task));
