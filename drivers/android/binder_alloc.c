@@ -31,10 +31,6 @@
 #include "binder_alloc.h"
 #include "binder_trace.h"
 
-#ifdef CONFIG_REKERNEL
-#include <../rekernel/rekernel.h>
-#endif
-
 #ifdef CONFIG_SAMSUNG_FREECESS
 #include <linux/freecess.h>
 #endif
