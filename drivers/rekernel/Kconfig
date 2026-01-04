@@ -12,4 +12,5 @@ config REKERNEL_NETWORK
 	default n
 	help
 	  Make tombstone users get a better experience.
+
 endmenu
