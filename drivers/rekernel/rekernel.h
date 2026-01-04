@@ -6,6 +6,8 @@
 #include <linux/freezer.h>
 #include <uapi/linux/android/binder.h>
 
+#define PACKET_SIZE	256
+
 enum report_type {
 	BINDER,
 	SIGNAL,

@@ -29,7 +29,6 @@
 #define NETLINK_REKERNEL_MAX		26
 #define NETLINK_REKERNEL_MIN		22
 #define USER_PORT					100
-#define PACKET_SIZE					256
 
 static const char* binder_type[] = {
 	"reply",
