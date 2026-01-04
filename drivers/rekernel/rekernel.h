@@ -18,6 +18,8 @@
 #define NETLINK_REKERNEL_MAX		26
 #define NETLINK_REKERNEL_MIN		22
 #define USER_PORT					100
+#define RESERVE_ORDER				17
+#define WARN_AHEAD_SPACE			(1 << RESERVE_ORDER)
 
 enum report_type {
 	BINDER,
