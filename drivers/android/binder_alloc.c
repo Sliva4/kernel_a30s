@@ -32,9 +32,7 @@
 #include "binder_trace.h"
 
 #ifdef CONFIG_REKERNEL
-#define RESERVE_ORDER 17
-#define WARN_AHEAD_SPACE (1 << RESERVE_ORDER)
-#define PACKET_SIZE	256
+#include <../rekernel/rekernel.h>
 #endif
 
 #ifdef CONFIG_SAMSUNG_FREECESS
