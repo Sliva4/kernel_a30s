@@ -393,7 +393,7 @@ static struct binder_buffer *binder_alloc_new_buf_locked(
 			if (line_is_frozen(proc_task)) {
      				char binder_kmsg[PACKET_SIZE];
                        	snprintf(binder_kmsg, sizeof(binder_kmsg), "type=Binder,bindertype=free_buffer_full,oneway=1,from_pid=%d,from=%d,target_pid=%d,target=%d;", current->pid, task_uid(current).val, proc_task->pid, task_uid(proc_task).val);
-         			sendMessage(binder_kmsg, strlen(binder_kmsg));
+         			send_netlink_message(binder_kmsg, strlen(binder_kmsg));
 			}
 		}
 	}
