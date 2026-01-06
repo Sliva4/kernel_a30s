@@ -1,5 +1,3 @@
-.config
-.config.old
 *.o
 *bin2c*
 *fixdep*
