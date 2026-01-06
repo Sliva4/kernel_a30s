@@ -45,7 +45,7 @@ jobs:
     - name: Make defconfig
       run: |
         echo "Building defconfig"
-        make ARCH=arm64 a30s -j$(nproc)
+        make ARCH=arm64 exynos7885-a30s_oneui_defconfig -j$(nproc)
 
     - name: Make kernel
       run: |
@@ -130,7 +130,7 @@ jobs:
     - name: Make defconfig
       run: |
         echo "Building defconfig"
-        make ARCH=arm64 a30s_vanilla -j$(nproc)
+        make ARCH=arm64 exynos7885-a30s_oneui_vanilla_defconfig -j$(nproc)
 
     - name: Make kernel
       run: |
