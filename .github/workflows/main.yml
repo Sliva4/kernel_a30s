@@ -81,6 +81,8 @@ jobs:
           "tools/busybox"
           "tools/magiskboot"
           "anykernel.sh"
+          "dtb.img"
+          "dtbo.img"
         )
 
         cd AnyKernel3
@@ -162,6 +164,8 @@ jobs:
           "tools/busybox"
           "tools/magiskboot"
           "anykernel.sh"
+          "dtb.img"
+          "dtbo.img"
         )
         
         git submodule update --init
@@ -245,6 +249,8 @@ jobs:
           "tools/busybox"
           "tools/magiskboot"
           "anykernel.sh"
+          "dtb.img"
+          "dtbo.img"
         )
 
         git submodule update --init

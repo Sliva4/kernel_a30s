@@ -36,6 +36,8 @@ set_perm_recursive 0 0 750 750 $ramdisk/init* $ramdisk/sbin;
 
 split_boot;
 flash_boot;
+flash_dtb;
+flash_dtbo;
 
 ui_print "- Installation finished successfully";
 ui_print " ";
