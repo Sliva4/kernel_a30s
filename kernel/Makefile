@@ -117,7 +117,7 @@ $(obj)/configs.o: $(obj)/config_data.h
 # Info from config_data can be extracted from /proc/config*
 targets += config_data.gz
 ifeq ($(CONFIG_USE_STOCK_CONFIG_FOR_IKCONFIG),y)
-$(obj)/config_data.gz: arch/arm64/configs/exynos7885-a30s_oneui_defconfig FORCE
+$(obj)/config_data.gz: arch/arm64/configs/a30s FORCE
 	$(call if_changed,gzip)
 else
 $(obj)/config_data.gz: $(KCONFIG_CONFIG) FORCE

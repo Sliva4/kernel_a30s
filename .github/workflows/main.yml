@@ -45,7 +45,7 @@ jobs:
     - name: Make defconfig
       run: |
         echo "Building defconfig"
-        make ARCH=arm64 a30s.config -j$(nproc)
+        make ARCH=arm64 a30s -j$(nproc)
 
     - name: Make kernel
       run: |
@@ -130,7 +130,7 @@ jobs:
     - name: Make defconfig
       run: |
         echo "Building defconfig"
-        make ARCH=arm64 a30s_vanilla.config -j$(nproc)
+        make ARCH=arm64 a30s_vanilla -j$(nproc)
 
     - name: Make kernel
       run: |
