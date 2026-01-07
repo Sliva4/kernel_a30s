@@ -28,10 +28,6 @@
 #include <linux/fsnotify.h>
 #include <linux/seq_file.h>
 
-#ifdef CONFIG_KSU_SUSFS
-#include <linux/susfs_def.h>
-#endif
-
 #define DEVPTS_DEFAULT_MODE 0600
 /*
  * ptmx is a new node in /dev/pts and will be unused in legacy (single-
@@ -654,9 +650,6 @@ struct inode *devpts_pty_new(struct pts_fs_info *fsi, dev_t device, int index,
 	return inode;
 }
 
-#ifdef CONFIG_KSU_SUSFS
-extern int ksu_handle_devpts(struct inode*);
-#endif
 
 /**
  * devpts_get_priv -- get private data for a slave
@@ -669,13 +662,7 @@ void *devpts_get_priv(struct inode *pts_inode)
 	struct dentry *dentry;
 	void *priv = NULL;
 	BUG_ON(pts_inode->i_rdev == MKDEV(TTYAUX_MAJOR, PTMX_MINOR));
-#ifdef CONFIG_KSU_SUSFS
-	if (likely(susfs_is_current_proc_umounted())) {
-		goto orig_flow;
-	}
-	ksu_handle_devpts(dentry->d_inode);
-orig_flow:
-#endif
+
 	/* Ensure dentry has not been deleted by devpts_pty_kill() */
 	dentry = d_find_alias(pts_inode);
 	if (!dentry)
