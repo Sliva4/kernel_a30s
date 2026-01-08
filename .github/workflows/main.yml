@@ -52,12 +52,6 @@ jobs:
         echo "Building kernel"
         make ARCH=arm64 -j$(nproc)
 
-    - name: Build DTB
-      run: |
-        echo "Building DTB"
-        make ARCH=arm64 -j$(nproc) dtb.img
-        cp arch/arm64/boot/dtb.img AnyKernel3/dtb.img
-
     - name: Zip kernel
       shell: bash
       run: |
@@ -136,12 +130,6 @@ jobs:
       run: |
         echo "Building kernel"
         make ARCH=arm64 -j$(nproc)
-
-    - name: Build DTB
-      run: |
-        echo "Building DTB"
-        make ARCH=arm64 -j$(nproc) dtb.img
-        cp arch/arm64/boot/dtb.img AnyKernel3/dtb.img
 
     - name: Zip kernel
       shell: bash
@@ -225,12 +213,6 @@ jobs:
       run: |
         echo "Building kernel"
         make ARCH=arm64 -j$(nproc)
-
-    - name: Build DTB
-      run: |
-        echo "Building DTB"
-        make ARCH=arm64 -j$(nproc) dtb.img
-        cp arch/arm64/boot/dtb.img AnyKernel3/dtb.img
 
     - name: Zip kernel
       shell: bash
