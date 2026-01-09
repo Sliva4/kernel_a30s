@@ -74,8 +74,8 @@ static void nomount_flush_dcache(const char *path_name) {
 }
 
 static unsigned long nomount_generate_ino(const char *dir, const char *name) {
-    u32 h1 = full_name_hash(NULL, dir, strlen(dir));
-    u32 h2 = full_name_hash(NULL, name, strlen(name));
+    u32 h1 = full_name_hash(dir, strlen(dir));
+    u32 h2 = full_name_hash(name, strlen(name));
     return (unsigned long)(h1 ^ h2);
 }
 
@@ -158,7 +158,7 @@ char *nomount_resolve_path(const char *pathname)
     u32 hash;
 
     if (NOMOUNT_DISABLED() || nomount_is_uid_blocked(current_uid().val) || !pathname) return NULL;
-    hash = full_name_hash(NULL, pathname, strlen(pathname));
+    hash = full_name_hash(pathname, strlen(pathname));
 
     rcu_read_lock();
     hash_for_each_possible_rcu(nomount_rules_ht, rule, node, hash) {
@@ -354,7 +354,7 @@ static void nomount_auto_inject_parent(const char *v_path, unsigned char type)
     *last_slash = '\0';
     parent_path = path_copy;
     name = last_slash + 1;
-    hash = full_name_hash(NULL, parent_path, strlen(parent_path));
+    hash = full_name_hash(parent_path, strlen(parent_path));
 
     spin_lock(&nomount_lock);
 
@@ -416,7 +416,7 @@ static int nomount_ioctl_add_rule(unsigned long arg)
         return PTR_ERR(r_path);
     }
 
-    hash = full_name_hash(NULL, v_path, strlen(v_path));
+    hash = full_name_hash(v_path, strlen(v_path));
     rule = kzalloc(sizeof(*rule), GFP_KERNEL);
     if (!rule) {
         kfree(v_path); kfree(r_path);
