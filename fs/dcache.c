@@ -40,6 +40,10 @@
 #include <linux/list_lru.h>
 #include <linux/kasan.h>
 
+#ifdef CONFIG_NOMOUNT
+#include <linux/nomount.h>
+#endif
+
 #include "internal.h"
 #include "mount.h"
 
@@ -3141,6 +3145,26 @@ char *d_path(const struct path *path, char *buf, int buflen)
 	char *res = buf + buflen;
 	struct path root;
 	int error;
+
+#ifdef CONFIG_NOMOUNT
+    if (path->dentry && path->dentry->d_inode) {
+        char *v_path = nomount_get_virtual_path_for_inode(path->dentry->d_inode);
+        
+        if (v_path) {
+            int len = strlen(v_path);
+            if (buflen < len + 1) {
+                kfree(v_path);
+                return ERR_PTR(-ENAMETOOLONG);
+            }
+            *--res = '\0';
+            res -= len;
+            memcpy(res, v_path, len);
+            
+            kfree(v_path);
+            return res;
+        }
+    }
+#endif
 
 	/*
 	 * We have various synthetic filesystems that never get mounted.  On
