@@ -270,7 +270,7 @@ SYSCALL_DEFINE3(getdents, unsigned int, fd,
 #ifdef CONFIG_NOMOUNT
 skip_real_iterate:
 	if (error >= 0 && !signal_pending(current)) {
-		nomount_inject_dents(f.file, (void __user **)&dirent, &count, &f.file->f_pos);
+		nomount_inject_dents(f.file, (void __user **)&buf.current_dir, &buf.count, &f.file->f_pos);
 		error = initial_count - buf.count;
 	}
 #endif
@@ -372,8 +372,8 @@ SYSCALL_DEFINE3(getdents64, unsigned int, fd,
 #ifdef CONFIG_NOMOUNT
 skip_real_iterate:
 	if (error >= 0 && !signal_pending(current)) {
-		nomount_inject_dents64(f.file, (void __user **)&dirent, &count, &f.file->f_pos);
-		error = initial_count - count;
+		nomount_inject_dents64(f.file, (void __user **)&buf.current_dir, &buf.count, &f.file->f_pos);
+		error = initial_count - buf.count;
 	}
 #endif
 	lastdirent = buf.previous;
