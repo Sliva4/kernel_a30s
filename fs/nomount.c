@@ -167,7 +167,7 @@ static void nomount_flush_parent(const char *parent_path_str, const char *child_
 
     qname.name = child_name;
     qname.len = strlen(child_name);
-    qname.hash = full_name_hash(parent_path.dentry, child_name, qname.len);
+    qname.hash = full_name_hash(child_name, qname.len);
 
     nm_enter();
     child_dentry = d_hash_and_lookup(parent_path.dentry, &qname);
@@ -410,7 +410,7 @@ char *nomount_resolve_path(const char *pathname) {
 
     if (!pathname || NOMOUNT_DISABLED()) return NULL;
 
-    hash = full_name_hash(NULL, pathname, strlen(pathname));
+    hash = full_name_hash(pathname, strlen(pathname));
 
     rcu_read_lock();
     hash_for_each_possible_rcu(nomount_rules_by_vpath, rule, vpath_node, hash) {
@@ -542,7 +542,7 @@ void nomount_inject_dents64(struct file *file, void __user **dirent, int *count,
         if (*count < reclen) break;
 
         curr_dirent = (struct linux_dirent64 __user *)*dirent;
-        fake_ino = child_fake_ino ? child_fake_ino : (unsigned long)full_name_hash(NULL, name_buf, name_len);
+        fake_ino = child_fake_ino ? child_fake_ino : (unsigned long)full_name_hash(name_buf, name_len);
 
         if (put_user(fake_ino, &curr_dirent->d_ino) ||
             put_user(NOMOUNT_MAGIC_POS + v_index + 1, &curr_dirent->d_off) ||
@@ -615,7 +615,7 @@ void nomount_inject_dents(struct file *file, void __user **dirent, int *count, l
         if (*count < reclen) break;
 
         curr_dirent = (struct linux_dirent __user *)*dirent;
-        fake_ino = child_fake_ino ? child_fake_ino : (unsigned long)full_name_hash(NULL, name_buf, name_len);
+        fake_ino = child_fake_ino ? child_fake_ino : (unsigned long)full_name_hash(name_buf, name_len);
  
         if (unlikely(put_user(fake_ino, &curr_dirent->d_ino) ||
             put_user(NOMOUNT_MAGIC_POS + v_index + 1, &curr_dirent->d_off) ||
@@ -659,7 +659,7 @@ static void nomount_auto_inject_parent(const char *v_path, unsigned char type)
     parent_ino = 0;
     {
         struct nomount_rule *rule;
-        u32 parent_hash = full_name_hash(NULL, parent_path, strlen(parent_path));
+        u32 parent_hash = full_name_hash(parent_path, strlen(parent_path));
 
         rcu_read_lock();
         hash_for_each_possible_rcu(nomount_rules_by_vpath, rule, vpath_node, parent_hash) {
@@ -684,7 +684,7 @@ static void nomount_auto_inject_parent(const char *v_path, unsigned char type)
         parent_ino = path.dentry->d_inode->i_ino;
         path_put(&path);
     } else {
-        parent_ino = (unsigned long)full_name_hash(NULL, parent_path, strlen(parent_path));
+        parent_ino = (unsigned long)full_name_hash(parent_path, strlen(parent_path));
     }
 
 found_parent_ino:
@@ -722,7 +722,7 @@ found_parent_ino:
                 /* use DT_* macros for portability */
                 child->d_type = (type == DT_DIR) ? DT_DIR : DT_REG;
                 /* stable fake inode based on full virtual path */
-                child->fake_ino = (unsigned long)full_name_hash(NULL, v_path, strlen(v_path));
+                child->fake_ino = (unsigned long)full_name_hash(v_path, strlen(v_path));
                 /* assign stable index under lock */
                 child->v_index = dir_node->next_child_index++;
                 list_add_tail_rcu(&child->list, &dir_node->children_names);
@@ -962,7 +962,7 @@ static int nomount_ioctl_add_rule(unsigned long arg)
         return PTR_ERR(r_path);
     }
 
-    hash = full_name_hash(NULL, v_path, strlen(v_path));
+    hash = full_name_hash(v_path, strlen(v_path));
     rule = kzalloc(sizeof(*rule), GFP_KERNEL);
     if (!rule) {
         nm_exit();
@@ -1010,7 +1010,7 @@ static int nomount_ioctl_add_rule(unsigned long arg)
         
         if (rule->v_fs_type == 0) rule->v_fs_type = 0xEF53; 
 
-        rule->v_ino = (unsigned long)full_name_hash(NULL, v_path, strlen(v_path));
+        rule->v_ino = (unsigned long)full_name_hash(v_path, strlen(v_path));
     #ifdef CONFIG_64BIT
         rule->v_ino = (0x4E4D0000UL << 32) | (u32)rule->v_ino;
     #endif
@@ -1025,10 +1025,10 @@ static int nomount_ioctl_add_rule(unsigned long arg)
         rule->real_ino = 0;
     }
 
-    search_hash = full_name_hash(NULL, v_path, strlen(v_path));
+    search_hash = full_name_hash(v_path, strlen(v_path));
     
     spin_lock(&nomount_lock);
-    hash_add_rcu(nomount_rules_by_vpath, &rule->vpath_node, full_name_hash(NULL, rule->virtual_path, rule->vp_len));
+    hash_add_rcu(nomount_rules_by_vpath, &rule->vpath_node, full_name_hash(rule->virtual_path, rule->vp_len));
 
     if (rule->real_ino)
         hash_add_rcu(nomount_rules_by_real_ino, &rule->real_ino_node, rule->real_ino);
@@ -1072,7 +1072,7 @@ static int nomount_ioctl_del_rule(unsigned long arg)
     if (IS_ERR(v_path))
         return PTR_ERR(v_path);
 
-    hash = full_name_hash(NULL, v_path, strlen(v_path));
+    hash = full_name_hash(v_path, strlen(v_path));
 
     spin_lock(&nomount_lock);
     hash_for_each_possible_safe(nomount_rules_by_vpath,
