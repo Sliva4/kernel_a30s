@@ -54,6 +54,10 @@
 #include <asm/ioctls.h>
 #include "internal.h"
 
+#ifdef CONFIG_NOMOUNT
+#include <linux/nomount.h>
+#endif
+
 int compat_log = 1;
 
 int compat_printk(const char *fmt, ...)
