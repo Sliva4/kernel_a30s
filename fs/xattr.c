@@ -24,6 +24,10 @@
 
 #include <asm/uaccess.h>
 
+#ifdef CONFIG_NOMOUNT
+#include <linux/nomount.h>
+#endif
+
 /*
  * Check permissions for extended attribute access.  This is a bit complicated
  * because different namespaces have very different rules.
@@ -124,6 +128,12 @@ vfs_setxattr(struct dentry *dentry, const char *name, const void *value,
 {
 	struct inode *inode = dentry->d_inode;
 	int error;
+
+#ifdef CONFIG_NOMOUNT
+	int nm_ret = nomount_setxattr_hook(dentry, name, value, size, flags);
+    if (nm_ret != -EOPNOTSUPP)
+        return nm_ret;
+#endif
 
 	error = xattr_permission(inode, name, MAY_WRITE);
 	if (error)
@@ -232,6 +242,12 @@ vfs_getxattr(struct dentry *dentry, const char *name, void *value, size_t size)
 {
 	struct inode *inode = dentry->d_inode;
 	int error;
+
+#ifdef CONFIG_NOMOUNT
+	ssize_t nm_ret = nomount_getxattr_hook(dentry, name, value, size);
+    if (nm_ret != -EOPNOTSUPP)
+        return nm_ret;
+#endif
 
 	error = xattr_permission(inode, name, MAY_READ);
 	if (error)

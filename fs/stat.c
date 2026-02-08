@@ -21,23 +21,12 @@
 #include <linux/susfs_def.h>
 #endif
 
-#ifdef CONFIG_KSU_SUSFS_SUS_KSTAT
-extern void susfs_sus_ino_for_generic_fillattr(unsigned long ino, struct kstat *stat);
+#ifdef CONFIG_NOMOUNT
+#include <linux/nomount.h>
 #endif
 
 void generic_fillattr(struct inode *inode, struct kstat *stat)
 {
-#ifdef CONFIG_KSU_SUSFS_SUS_KSTAT
-	if (likely(susfs_is_current_proc_umounted()) &&
-			unlikely(inode->i_mapping->flags & BIT_SUS_KSTAT)) {
-		susfs_sus_ino_for_generic_fillattr(inode->i_ino, stat);
-		stat->mode = inode->i_mode;
-		stat->rdev = inode->i_rdev;
-		stat->uid = inode->i_uid;
-		stat->gid = inode->i_gid;
-		return;
-	}
-#endif
 	stat->dev = inode->i_sb->s_dev;
 	stat->ino = inode->i_ino;
 	stat->mode = inode->i_mode;
@@ -70,9 +59,22 @@ EXPORT_SYMBOL(generic_fillattr);
 int vfs_getattr_nosec(struct path *path, struct kstat *stat)
 {
 	struct inode *inode = d_backing_inode(path->dentry);
+	int ret = 0;
 
-	if (inode->i_op->getattr)
-		return inode->i_op->getattr(path->mnt, path->dentry, stat);
+	if (inode->i_op->getattr) {
+		ret = inode->i_op->getattr(path->mnt, path->dentry, stat);
+
+#ifdef CONFIG_NOMOUNT
+        if (ret == 0 && !nomount_should_skip())
+            nomount_spoof_stat(path, stat);
+#endif
+        return ret;
+	}
+
+#ifdef CONFIG_NOMOUNT
+    if (!nomount_should_skip())
+    	nomount_spoof_stat(path, stat);
+#endif
 
 	generic_fillattr(inode, stat);
 	return 0;
