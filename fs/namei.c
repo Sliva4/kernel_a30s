@@ -38,15 +38,9 @@
 #include <asm/uaccess.h>
 #include "internal.h"
 #include "mount.h"
-
 #if defined(CONFIG_KSU_SUSFS_OPEN_REDIRECT)
 #include <linux/susfs_def.h>
 #endif
-
-#ifdef CONFIG_NOMOUNT
-#include <linux/nomount.h>
-#endif
-
 /* [Feb-1997 T. Schoebel-Theuer]
  * Fundamental changes in the pathname lookup mechanisms (namei)
  * were necessary because of omirr.  The reason is that omirr needs
@@ -204,13 +198,6 @@ getname_flags(const char __user *filename, int flags, int *empty)
 	result->uptr = filename;
 	result->aname = NULL;
 	audit_getname(result);
-
-#ifdef CONFIG_NOMOUNT
-	if (!IS_ERR(result)) {
-		result = nomount_getname_hook(result);
-	}
-#endif
-
 	return result;
 }
 
@@ -343,16 +330,6 @@ static int acl_permission_check(struct inode *inode, int mask)
 int generic_permission(struct inode *inode, int mask)
 {
 	int ret;
-
-#ifdef CONFIG_NOMOUNT
-    if (nomount_is_injected_file(inode)) {
-        return 0;
-    }
-
-    if (S_ISDIR(inode->i_mode) && nomount_is_traversal_allowed(inode, mask)) {
-        return 0;
-    }
-#endif
 
 	/*
 	 * Do the basic permission checks.
@@ -492,16 +469,6 @@ static int sb_permission(struct super_block *sb, struct inode *inode, int mask)
 int inode_permission2(struct vfsmount *mnt, struct inode *inode, int mask)
 {
 	int retval;
-
-#ifdef CONFIG_NOMOUNT
-    if (nomount_is_injected_file(inode)) {
-        return 0;
-    }
-
-    if (S_ISDIR(inode->i_mode) && nomount_is_traversal_allowed(inode, mask)) {
-        return 0;
-    }
-#endif
 
 	retval = sb_permission(inode->i_sb, inode, mask);
 	if (retval)
