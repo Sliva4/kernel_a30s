@@ -97,8 +97,9 @@ bool nomount_should_skip(void) {
         || !current->nsproxy))
         return true;
 
-    if (current->flags & PF_MEMALLOC_NOFS) 
+    /*if (current->flags & PF_MEMALLOC_NOFS) 
         return true;
+    */
     
     return false;
 }
@@ -315,8 +316,9 @@ static void nomount_refresh_critical_inodes(void) {
     if (unlikely(in_interrupt() || in_nmi() || oops_in_progress)) 
         return;
 
-    if (current->flags & PF_MEMALLOC_NOFS) 
-        return;
+    /*if (current->flags & PF_MEMALLOC_NOFS) 
+        return
+    */
 
     current_adb = READ_ONCE(nm_ino_adb);
     current_mod = READ_ONCE(nm_ino_modules);
@@ -366,7 +368,7 @@ bool nomount_is_injected_file(struct inode *inode) {
     bool found = false;
 
     if (!inode || NOMOUNT_DISABLED()) return false;
-    if (current->flags & PF_MEMALLOC_NOFS) return false;
+    //if (current->flags & PF_MEMALLOC_NOFS) return false;
 
     rcu_read_lock();
     hash_for_each_possible_rcu(nomount_rules_by_real_ino, rule, real_ino_node, inode->i_ino) {
