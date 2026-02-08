@@ -21,3 +21,4 @@ AnyKernel3/Image
 !Kconfig.dtbo
 !AnyKernel3/tools/tweaks.zip
 .vscode-ctags
+*.DS_Store
