@@ -42,7 +42,7 @@
 
 #ifdef CONFIG_NOMOUNT
 #include <linux/nomount.h>
-+#endif
+#endif
 
 #include "internal.h"
 #include "mount.h"
