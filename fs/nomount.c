@@ -13,7 +13,7 @@
 #include <linux/miscdevice.h>
 #include <linux/cred.h>
 #include <linux/vmalloc.h>
-#include <linux/sched/mm.h>
+#include <linux/mm.h>
 #include <linux/statfs.h>
 #include <linux/workqueue.h>
 #include <linux/xattr.h>

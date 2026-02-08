@@ -45,7 +45,7 @@
 
 #ifdef CONFIG_NOMOUNT
 #include <linux/nomount.h>
-#include <linux/sched/mm.h>
+#include <linux/mm.h>
 #endif
 
 /* [Feb-1997 T. Schoebel-Theuer]
